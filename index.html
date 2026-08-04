@@ -824,10 +824,6 @@
             margin-top: 6px;
             justify-content: center;
         }
-        .reset-danger-group .reset-confirm-box .btn-row-sm .btn-sm {
-            padding: 4px 16px;
-            font-size: 0.7rem;
-        }
 
         .music-library {
             background: #1f1a2b;
@@ -990,7 +986,7 @@
 
     <div class="cat-area">
         <div id="cat">
-            <img id="catImage" src="skins/default/default.png" alt="Котик" />
+            <img id="catImage" src="default.png" alt="Котик" />
         </div>
         <div class="rarity-badge">
             🎨 <span id="skinDisplay">обычный</span>
@@ -1008,10 +1004,10 @@
         <span>💊 <span id="capsuleCount">0</span> капсул</span>
     </div>
     <div class="legend">
-        <span><img src="images/common.png" alt="common" /> обычная</span>
-        <span><img src="images/rare.png" alt="rare" /> редкая</span>
-        <span><img src="images/epic.png" alt="epic" /> эпическая</span>
-        <span><img src="images/mythic.png" alt="mythic" /> мифическая</span>
+        <span><img src="common.png" alt="common" /> обычная</span>
+        <span><img src="rare.png" alt="rare" /> редкая</span>
+        <span><img src="epic.png" alt="epic" /> эпическая</span>
+        <span><img src="mythic.png" alt="mythic" /> мифическая</span>
     </div>
 </div>
 
@@ -1097,11 +1093,11 @@
         };
 
         const RARITIES = [
-            { id: 'default', label: 'обычный', emoji: '🤍', level: -1, weight: 0, image: 'images/default.png' },
-            { id: 'common', label: 'обычная', emoji: '🔵', level: 0, weight: 50, image: 'images/common.png' },
-            { id: 'rare', label: 'редкая', emoji: '🟣', level: 1, weight: 30, image: 'images/rare.png' },
-            { id: 'epic', label: 'эпическая', emoji: '💗', level: 2, weight: 15, image: 'images/epic.png' },
-            { id: 'mythic', label: 'мифическая', emoji: '🔴', level: 3, weight: 5, image: 'images/mythic.png' }
+            { id: 'default', label: 'обычный', emoji: '🤍', level: -1, weight: 0, image: 'default.png' },
+            { id: 'common', label: 'обычная', emoji: '🔵', level: 0, weight: 50, image: 'common.png' },
+            { id: 'rare', label: 'редкая', emoji: '🟣', level: 1, weight: 30, image: 'rare.png' },
+            { id: 'epic', label: 'эпическая', emoji: '💗', level: 2, weight: 15, image: 'epic.png' },
+            { id: 'mythic', label: 'мифическая', emoji: '🔴', level: 3, weight: 5, image: 'mythic.png' }
         ];
 
         let settings = {
@@ -1285,18 +1281,18 @@
         }
 
         function getSkinPath(rarity, index) {
-            if (rarity === 'default') return 'skins/default/default.png';
-            return `skins/${rarity}/${rarity} (${index}).png`;
+            if (rarity === 'default') return 'default.png';
+            return `${rarity} (${index}).png`;
         }
 
         function getSoundPath(rarity) {
-            if (rarity === 'default') return 'sounds/default.mp3';
-            return `sounds/${rarity}.mp3`;
+            if (rarity === 'default') return 'default.mp3';
+            return `${rarity}.mp3`;
         }
 
         function getRarityImage(rarityId) {
             const rarity = getRarityById(rarityId);
-            return rarity.image || 'images/default.png';
+            return rarity.image || 'default.png';
         }
 
         function getRandomSkin(rarity) {
@@ -1375,7 +1371,7 @@
 
         function playCapsuleSound() {
             try {
-                const audio = new Audio('sounds/capsule_open.mp3');
+                const audio = new Audio('capsule_open.mp3');
                 audio.volume = settings.capsuleVolume;
                 audio.play().catch(() => {});
             } catch (e) {}
@@ -1829,7 +1825,7 @@
             }
         }
 
-        // --- НАСТРОЙКИ С ВКЛАДКАМИ ---
+        // --- НАСТРОЙКИ ---
         function renderSettings() {
             let html = `
                 <div class="settings-tabs">
@@ -1838,7 +1834,6 @@
                 </div>
             `;
 
-            // Вкладка "Основные"
             html += `<div class="settings-tab-content active" id="tab-main">`;
             html += `
                 <div class="settings-group">
@@ -1904,7 +1899,6 @@
             }
             html += `</div>`;
 
-            // Сброс прогресса
             html += `
                 <div class="reset-danger-group">
                     <div class="reset-header">
@@ -1922,7 +1916,6 @@
             `;
             html += `</div>`;
 
-            // Вкладка "Очистка"
             html += `<div class="settings-tab-content" id="tab-clean">`;
             html += `<div id="cleanContent"></div>`;
             html += `</div>`;
@@ -1935,7 +1928,6 @@
 
             settingsContent.innerHTML = html;
 
-            // Обработчики вкладок
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -1947,7 +1939,6 @@
                 });
             });
 
-            // Обработчики слайдеров
             const clickSlider = document.getElementById('clickVolume');
             if (clickSlider) {
                 const clickValue = clickSlider.parentElement.querySelector('.settings-value');
@@ -1984,13 +1975,12 @@
                 });
             }
 
-            // Рендерим вкладку очистки если она активна
             if (document.getElementById('tab-clean').classList.contains('active')) {
                 renderCleanTab();
             }
         }
 
-        // --- ВКЛАДКА ОЧИСТКИ ---
+        // --- ОЧИСТКА ---
         function renderCleanTab() {
             const sorted = getSortedSkins();
             let html = `
@@ -2064,7 +2054,6 @@
             const sorted = getSortedSkins();
             if (index >= sorted.length) return;
             const item = sorted[index];
-            // Нельзя удалить надетый скин
             if (state.equippedId === item.id) return;
             
             const idx = selectedForDelete.indexOf(index);
@@ -2094,11 +2083,9 @@
 
         window.confirmDelete = function() {
             const sorted = getSortedSkins();
-            // Удаляем с конца, чтобы индексы не сбивались
             const sortedIndices = [...selectedForDelete].sort((a, b) => b - a);
             for (const idx of sortedIndices) {
                 const item = sorted[idx];
-                // Пропускаем если надет (защита)
                 if (state.equippedId === item.id) continue;
                 const realIdx = state.inventory.findIndex(i => i.id === item.id);
                 if (realIdx > -1) {
@@ -2328,4 +2315,4 @@
     })();
 </script>
 </body>
-</html>
+    </html>
