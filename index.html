@@ -1,0 +1,2331 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>🐱 MeowClicker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #1e1a2b, #2a2438);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            padding: 10px;
+            touch-action: manipulation;
+        }
+        .game {
+            background: #322c42;
+            padding: 20px 15px 25px;
+            border-radius: 40px;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.7), inset 0 2px 0 #4e4668;
+            text-align: center;
+            max-width: 440px;
+            width: 100%;
+            position: relative;
+        }
+        h1 {
+            font-size: 1.8rem;
+            color: #f6e9b2;
+            text-shadow: 0 4px 0 #7a5f4b;
+            letter-spacing: 2px;
+            margin-bottom: 4px;
+        }
+        .score-wrap {
+            background: #1f1a2b;
+            padding: 8px 10px;
+            border-radius: 100px;
+            margin: 4px 0 12px;
+            box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.6);
+        }
+        #score {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: #ffe484;
+            text-shadow: 0 0 12px #f0b34b;
+            letter-spacing: 2px;
+        }
+        .cat-area {
+            background: #252035;
+            border-radius: 100px;
+            padding: 12px 10px 8px;
+            margin: 6px 0 10px;
+            box-shadow: inset 0 -6px 0 #16131f;
+        }
+        #cat {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+            transition: 0.07s ease;
+            filter: drop-shadow(0 12px 8px #0f0c16);
+            -webkit-touch-callout: none;
+            touch-action: manipulation;
+        }
+        #cat:active {
+            transform: scale(0.85);
+        }
+        #cat img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 20px;
+            background: #1f1a2b;
+            pointer-events: none;
+        }
+        .rarity-badge {
+            background: #201c2c;
+            border-radius: 60px;
+            padding: 4px 14px;
+            font-weight: 600;
+            color: #d6c9f0;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin: 4px 0 8px;
+            box-shadow: inset 0 2px 0 #3f3657;
+        }
+        #skinDisplay {
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        #skinDisplay img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+        .btn {
+            background: #5b4b70;
+            border: none;
+            border-radius: 60px;
+            padding: 10px 16px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #f5edff;
+            box-shadow: 0 6px 0 #332b42, 0 6px 14px #00000055;
+            cursor: pointer;
+            transition: 0.07s linear;
+            margin: 4px 0 6px;
+            width: 100%;
+            letter-spacing: 1px;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .btn:active {
+            transform: translateY(5px);
+            box-shadow: 0 1px 0 #332b42;
+        }
+        .btn:disabled {
+            opacity: 0.4;
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #332b42;
+            pointer-events: none;
+        }
+        .btn-secondary {
+            background: #3d3452;
+            box-shadow: 0 5px 0 #28203b;
+            font-size: 0.85rem;
+        }
+        .btn-craft {
+            background: #4a6a4f;
+            box-shadow: 0 5px 0 #2a3d2e;
+            font-size: 0.85rem;
+        }
+        .btn-craft:active {
+            transform: translateY(5px);
+            box-shadow: 0 0px 0 #2a3d2e;
+        }
+        .btn-success {
+            background: #2d6a4f;
+            box-shadow: 0 5px 0 #1a3d2e;
+        }
+        .btn-success:active {
+            transform: translateY(5px);
+            box-shadow: 0 0px 0 #1a3d2e;
+        }
+        .btn-settings {
+            background: #4a3d5e;
+            box-shadow: 0 5px 0 #2d243b;
+            font-size: 0.8rem;
+        }
+        .btn-settings:active {
+            transform: translateY(5px);
+            box-shadow: 0 0px 0 #2d243b;
+        }
+        .btn-danger {
+            background: #5a2d3a;
+            box-shadow: 0 5px 0 #3a1d25;
+            font-size: 0.8rem;
+        }
+        .btn-danger:active {
+            transform: translateY(5px);
+            box-shadow: 0 0px 0 #3a1d25;
+        }
+        .btn-sm {
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            width: auto;
+            margin: 2px;
+            border: none;
+            border-radius: 40px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.05s linear;
+            touch-action: manipulation;
+            color: white;
+        }
+        .btn-sm.success {
+            background: #2d6a4f;
+            box-shadow: 0 3px 0 #1a3d2e;
+        }
+        .btn-sm.success:active {
+            transform: translateY(3px);
+            box-shadow: 0 0px 0 #1a3d2e;
+        }
+        .btn-sm.danger {
+            background: #5a2d3a;
+            box-shadow: 0 3px 0 #3a1d25;
+        }
+        .btn-sm.danger:active {
+            transform: translateY(3px);
+            box-shadow: 0 0px 0 #3a1d25;
+        }
+        .btn-sm.playing {
+            background: #4a6a5f;
+            box-shadow: 0 3px 0 #2a3d35;
+        }
+        .btn-sm.secondary {
+            background: #5b4b70;
+            box-shadow: 0 3px 0 #332b42;
+        }
+        .btn-sm.secondary:active {
+            transform: translateY(3px);
+            box-shadow: 0 0px 0 #332b42;
+        }
+        .btn-row {
+            display: flex;
+            gap: 8px;
+        }
+        .btn-row .btn {
+            flex: 1;
+        }
+        .footer-info {
+            margin-top: 6px;
+            display: flex;
+            justify-content: center;
+            font-size: 0.6rem;
+            color: #6d5d85;
+        }
+        .legend {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            justify-content: center;
+            font-size: 0.6rem;
+            margin-top: 4px;
+        }
+        .legend span {
+            background: #231e31;
+            padding: 2px 8px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .legend span img {
+            width: 14px;
+            height: 14px;
+            object-fit: contain;
+            border-radius: 2px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #2d6a4f;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            pointer-events: none;
+            border: 1px solid #4a8c6f;
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            animation: fadeIn 0.2s ease;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: #2f2842;
+            border-radius: 40px;
+            padding: 20px 16px 16px;
+            max-width: 580px;
+            width: 100%;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 30px 60px #000000aa;
+            border: 1px solid #4c3f66;
+            animation: slideUp 0.25s ease;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #3f3457;
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+        .modal-header h2 {
+            color: #f0e6c5;
+            font-size: 1.2rem;
+            text-shadow: 0 2px 0 #5f4b6b;
+        }
+        .modal-close {
+            background: #3f3457;
+            border: none;
+            color: #d6c9f0;
+            font-size: 1.4rem;
+            width: 36px;
+            height: 36px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: 0.1s;
+            box-shadow: 0 3px 0 #221d30;
+            line-height: 1;
+            touch-action: manipulation;
+        }
+        .modal-close:active {
+            transform: translateY(3px);
+            box-shadow: 0 0px 0 #221d30;
+        }
+        .modal-body {
+            overflow-y: auto;
+            flex: 1;
+            padding-right: 2px;
+            -webkit-overflow-scrolling: touch;
+        }
+        .modal-body::-webkit-scrollbar {
+            width: 4px;
+        }
+        .modal-body::-webkit-scrollbar-track {
+            background: #1f1a2b;
+            border-radius: 10px;
+        }
+        .modal-body::-webkit-scrollbar-thumb {
+            background: #5b4b70;
+            border-radius: 10px;
+        }
+
+        .settings-tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #3f3457;
+            padding-bottom: 6px;
+        }
+        .settings-tabs .tab-btn {
+            background: transparent;
+            border: none;
+            color: #8a7aa8;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .settings-tabs .tab-btn.active {
+            background: #4a3d5e;
+            color: #f0e6c5;
+            box-shadow: 0 2px 0 #6b5a85;
+        }
+        .settings-tabs .tab-btn:hover {
+            color: #d6c9f0;
+        }
+        .settings-tab-content {
+            display: none;
+        }
+        .settings-tab-content.active {
+            display: block;
+        }
+
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-top: 4px;
+        }
+        .inv-slot {
+            background: #231e31;
+            border-radius: 14px;
+            padding: 8px 4px;
+            text-align: center;
+            border: 2px solid #3a314f;
+            transition: 0.15s;
+            position: relative;
+            min-height: 85px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            touch-action: manipulation;
+            cursor: pointer;
+        }
+        .inv-slot:active {
+            transform: scale(0.95);
+        }
+        .inv-slot img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+            border-radius: 8px;
+            background: #1a1625;
+        }
+        .inv-slot .item-name {
+            font-size: 0.5rem;
+            color: #d6c9f0;
+            margin-top: 2px;
+            line-height: 1.1;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .inv-slot .item-rarity {
+            font-size: 0.6rem;
+            margin-top: 1px;
+        }
+        .inv-slot .item-rarity img {
+            width: 16px;
+            height: 16px;
+            object-fit: contain;
+            border-radius: 2px;
+            background: transparent;
+        }
+        .inv-slot .equipped-badge {
+            position: absolute;
+            top: 2px;
+            left: 4px;
+            background: #6bcf7b;
+            color: #1a1a1a;
+            font-size: 0.45rem;
+            font-weight: 700;
+            padding: 0 6px;
+            border-radius: 20px;
+            z-index: 2;
+        }
+        .inv-slot .delete-check {
+            position: absolute;
+            top: 2px;
+            right: 4px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #3a1d25;
+            border: 2px solid #5a2d3a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.5rem;
+            color: white;
+            z-index: 3;
+            transition: 0.15s;
+        }
+        .inv-slot.selected-delete .delete-check {
+            background: #6bcf7b;
+            border-color: #6bcf7b;
+        }
+        .inv-slot.selected-delete {
+            border-color: #6bcf7b !important;
+            box-shadow: 0 0 12px #6bcf7b55;
+        }
+        .inv-slot.rarity-common { border-color: #4a8cff; background: #1e2840; }
+        .inv-slot.rarity-rare { border-color: #b57aff; background: #2a1f40; }
+        .inv-slot.rarity-epic { border-color: #ff6b9d; background: #3a1f30; }
+        .inv-slot.rarity-mythic { border-color: #ff3b3b; background: #3a1a1a; }
+        .inv-slot.capsule-slot {
+            border-color: #f0b34b;
+            background: #2f281a;
+            cursor: pointer;
+        }
+        .inv-slot .slot-label {
+            font-size: 0.5rem;
+            color: #8a7aa8;
+        }
+        .inv-slot .craft-select {
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            width: 18px;
+            height: 18px;
+            background: #5b4b70;
+            border: 2px solid #f0e6c5;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.5rem;
+            font-weight: 700;
+            z-index: 3;
+        }
+        .inv-slot.selected .craft-select {
+            display: flex;
+            background: #6bcf7b;
+        }
+        .inv-slot.selected {
+            border-color: #6bcf7b !important;
+            box-shadow: 0 0 12px #6bcf7b55;
+        }
+        .inv-slot .exchange-btn {
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #6b4f8a;
+            border: none;
+            color: white;
+            padding: 1px 8px;
+            border-radius: 20px;
+            font-size: 0.45rem;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            touch-action: manipulation;
+            z-index: 3;
+        }
+        .inv-slot .exchange-btn:active {
+            transform: translateX(-50%) scale(0.9);
+        }
+        .inv-slot.equipped {
+            border-color: #6bcf7b !important;
+            box-shadow: 0 0 15px #6bcf7b66;
+        }
+
+        .craft-action-panel {
+            position: sticky;
+            bottom: 0;
+            background: #1f1a2b;
+            border-radius: 30px;
+            padding: 10px 14px;
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+            border: 2px solid #3f3457;
+            z-index: 10;
+        }
+        .craft-action-panel .craft-info {
+            color: #b7a7d9;
+            font-size: 0.7rem;
+            flex: 1;
+            text-align: left;
+        }
+        .craft-action-btn {
+            background: #6b4f8a;
+            border: none;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 0 #3d2f52;
+            cursor: pointer;
+            transition: 0.05s linear;
+            touch-action: manipulation;
+            min-width: 120px;
+        }
+        .craft-action-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 #3d2f52;
+        }
+        .craft-action-btn:disabled {
+            opacity: 0.3;
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #3d2f52;
+            pointer-events: none;
+        }
+
+        .delete-action-panel {
+            position: sticky;
+            bottom: 0;
+            background: #1f1a2b;
+            border-radius: 30px;
+            padding: 10px 14px;
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+            border: 2px solid #5a2d3a;
+            z-index: 10;
+        }
+        .delete-action-panel .delete-info {
+            color: #ff8a8a;
+            font-size: 0.7rem;
+            flex: 1;
+            text-align: left;
+        }
+        .delete-action-btn {
+            background: #5a2d3a;
+            border: none;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 0 #3a1d25;
+            cursor: pointer;
+            transition: 0.05s linear;
+            touch-action: manipulation;
+            min-width: 120px;
+        }
+        .delete-action-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 #3a1d25;
+        }
+        .delete-action-btn:disabled {
+            opacity: 0.3;
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #3a1d25;
+            pointer-events: none;
+        }
+
+        .delete-confirm-box {
+            display: none;
+            margin-top: 8px;
+            padding: 10px 12px;
+            background: #3a1d25;
+            border-radius: 20px;
+            border: 2px solid #5a2d3a;
+        }
+        .delete-confirm-box.active {
+            display: block;
+        }
+        .delete-confirm-box span {
+            color: #ff8a8a;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .delete-confirm-box .btn-row-sm {
+            display: flex;
+            gap: 6px;
+            margin-top: 6px;
+            justify-content: center;
+        }
+
+        .empty-inv {
+            color: #6d5d85;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 0.8rem;
+            grid-column: 1 / -1;
+        }
+
+        .capsule-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin: 8px 0;
+        }
+        .capsule-preview-item {
+            background: #1f1a2b;
+            border-radius: 12px;
+            padding: 6px 4px;
+            text-align: center;
+            border: 2px solid #3a314f;
+        }
+        .capsule-preview-item img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            border-radius: 6px;
+            background: #1a1625;
+        }
+        .capsule-preview-item .preview-name {
+            font-size: 0.45rem;
+            color: #b7a7d9;
+            margin-top: 2px;
+        }
+        .capsule-preview-item .preview-rarity {
+            font-size: 0.5rem;
+            margin-top: 2px;
+        }
+        .capsule-preview-item .preview-rarity img {
+            width: 16px;
+            height: 16px;
+            object-fit: contain;
+            border-radius: 2px;
+            background: transparent;
+        }
+        .capsule-preview-item.common { border-color: #4a8cff; }
+        .capsule-preview-item.rare { border-color: #b57aff; }
+        .capsule-preview-item.epic { border-color: #ff6b9d; }
+        .capsule-preview-item.mythic { border-color: #ff3b3b; }
+
+        .capsule-result {
+            margin-top: 12px;
+            font-size: 1rem;
+            color: #f0e6c5;
+            min-height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding: 10px;
+            background: #1f1a2b;
+            border-radius: 20px;
+            border: 2px solid #f0b34b;
+        }
+        .capsule-result img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+
+        .capsule-preview-title {
+            color: #f0e6c5;
+            font-size: 0.9rem;
+            margin: 6px 0;
+        }
+        .capsule-preview-count {
+            color: #b7a7d9;
+            font-size: 0.7rem;
+        }
+
+        .settings-group {
+            background: #1f1a2b;
+            border-radius: 30px;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+        }
+        .settings-group label {
+            color: #d6c9f0;
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .settings-group input[type="range"] {
+            width: 60%;
+            height: 4px;
+            -webkit-appearance: none;
+            background: #4a3d5e;
+            border-radius: 10px;
+            outline: none;
+        }
+        .settings-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #6b4f8a;
+            cursor: pointer;
+            box-shadow: 0 0 10px #6b4f8a66;
+        }
+        .settings-group input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #6b4f8a;
+            cursor: pointer;
+            border: none;
+        }
+        .settings-value {
+            color: #f0e6c5;
+            font-weight: 700;
+            min-width: 30px;
+            text-align: right;
+        }
+
+        .reset-danger-group {
+            border: 2px solid #5a2d3a;
+            border-radius: 30px;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            background: #2a1a22;
+        }
+        .reset-danger-group .reset-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .reset-danger-group .reset-header span {
+            color: #ff8a8a;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+        .reset-danger-group .reset-confirm-box {
+            display: none;
+            margin-top: 8px;
+            padding: 8px 12px;
+            background: #3a1d25;
+            border-radius: 20px;
+        }
+        .reset-danger-group .reset-confirm-box.active {
+            display: block;
+        }
+        .reset-danger-group .reset-confirm-box span {
+            color: #ff8a8a;
+            font-size: 0.7rem;
+        }
+        .reset-danger-group .reset-confirm-box .btn-row-sm {
+            display: flex;
+            gap: 6px;
+            margin-top: 6px;
+            justify-content: center;
+        }
+        .reset-danger-group .reset-confirm-box .btn-row-sm .btn-sm {
+            padding: 4px 16px;
+            font-size: 0.7rem;
+        }
+
+        .music-library {
+            background: #1f1a2b;
+            border-radius: 30px;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+        }
+        .music-library .music-header {
+            color: #f0e6c5;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .music-library .music-controls {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+        }
+        .music-library .music-volume-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 4px;
+        }
+        .music-library .music-volume-row input[type="range"] {
+            flex: 1;
+            height: 4px;
+            -webkit-appearance: none;
+            background: #4a3d5e;
+            border-radius: 10px;
+            outline: none;
+            cursor: pointer;
+        }
+        .music-library .music-volume-row input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #6b4f8a;
+            cursor: grab;
+        }
+        .music-library .music-volume-row input[type="range"]::-webkit-slider-thumb:active {
+            cursor: grabbing;
+        }
+        .music-library .music-volume-row input[type="range"]::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #6b4f8a;
+            cursor: grab;
+            border: none;
+        }
+        .music-library .music-volume-row .vol-label {
+            color: #b7a7d9;
+            font-size: 0.6rem;
+            min-width: 30px;
+            text-align: right;
+        }
+        .music-library .music-song-list {
+            max-height: 120px;
+            overflow-y: auto;
+            margin-top: 6px;
+        }
+        .music-library .music-song-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .music-library .music-song-list::-webkit-scrollbar-track {
+            background: #16131f;
+            border-radius: 10px;
+        }
+        .music-library .music-song-list::-webkit-scrollbar-thumb {
+            background: #5b4b70;
+            border-radius: 10px;
+        }
+        .music-library .music-song-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #16131f;
+            border-radius: 20px;
+            padding: 4px 10px 4px 14px;
+            margin-bottom: 4px;
+        }
+        .music-library .music-song-item .song-name {
+            color: #d6c9f0;
+            font-size: 0.7rem;
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .music-library .music-song-item .song-actions {
+            display: flex;
+            gap: 4px;
+        }
+        .music-library .music-empty {
+            color: #6d5d85;
+            font-size: 0.7rem;
+            text-align: center;
+            padding: 8px 0;
+        }
+        .music-library .now-playing {
+            color: #6bcf7b;
+            font-size: 0.6rem;
+            margin-top: 4px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 480px) {
+            .game { padding: 15px 12px 20px; border-radius: 30px; }
+            h1 { font-size: 1.5rem; }
+            #score { font-size: 2rem; }
+            #cat { max-width: 150px; }
+            .btn { font-size: 0.8rem; padding: 8px 12px; }
+            .inv-slot { min-height: 70px; padding: 6px 2px; }
+            .inv-slot img { width: 36px; height: 36px; }
+            .modal { padding: 15px 12px 12px; border-radius: 30px; }
+            .capsule-preview-item img { width: 32px; height: 32px; }
+            .craft-action-btn { font-size: 0.7rem; padding: 6px 14px; min-width: 80px; }
+            .delete-action-btn { font-size: 0.7rem; padding: 6px 14px; min-width: 80px; }
+            .music-library .music-song-item .song-name { max-width: 80px; }
+            #skinDisplay img { width: 20px; height: 20px; }
+            .toast { font-size: 0.75rem; padding: 8px 16px; bottom: 20px; }
+            .settings-tabs .tab-btn { font-size: 0.65rem; padding: 4px 10px; }
+        }
+        @media (max-width: 380px) {
+            .inventory-grid { grid-template-columns: repeat(3, 1fr); }
+            .capsule-preview-grid { grid-template-columns: repeat(3, 1fr); }
+            .music-library .music-song-item .song-name { max-width: 60px; }
+        }
+        @media (min-width: 768px) {
+            .game { padding: 35px 30px 40px; }
+            #cat { max-width: 250px; }
+            h1 { font-size: 2.6rem; }
+            #score { font-size: 3.2rem; }
+            .btn { font-size: 1.1rem; padding: 14px 24px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="game">
+    <h1>🐾 Meow</h1>
+    <div class="score-wrap">
+        <div id="score">0</div>
+    </div>
+
+    <div class="cat-area">
+        <div id="cat">
+            <img id="catImage" src="skins/default/default.png" alt="Котик" />
+        </div>
+        <div class="rarity-badge">
+            🎨 <span id="skinDisplay">обычный</span>
+        </div>
+    </div>
+
+    <button class="btn btn-secondary" id="openInventoryBtn">🎒 Инвентарь</button>
+    
+    <div class="btn-row">
+        <button class="btn btn-craft" id="craftOpenBtn">🔨 Улучшить</button>
+        <button class="btn btn-settings" id="settingsOpenBtn">⚙️ Настройки</button>
+    </div>
+
+    <div class="footer-info">
+        <span>💊 <span id="capsuleCount">0</span> капсул</span>
+    </div>
+    <div class="legend">
+        <span><img src="images/common.png" alt="common" /> обычная</span>
+        <span><img src="images/rare.png" alt="rare" /> редкая</span>
+        <span><img src="images/epic.png" alt="epic" /> эпическая</span>
+        <span><img src="images/mythic.png" alt="mythic" /> мифическая</span>
+    </div>
+</div>
+
+<!-- ТОСТ -->
+<div class="toast" id="toast">🎉 Получена капсула!</div>
+
+<!-- Инвентарь -->
+<div class="modal-overlay" id="inventoryModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>🎒 Инвентарь</h2>
+            <button class="modal-close" id="closeInventoryBtn">✕</button>
+        </div>
+        <div class="modal-body">
+            <div id="modalInventoryContent"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Крафт -->
+<div class="modal-overlay" id="craftModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>🔨 Улучшение</h2>
+            <button class="modal-close" id="closeCraftBtn">✕</button>
+        </div>
+        <div class="modal-body" id="craftModalBody">
+            <div id="craftContent"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Настройки -->
+<div class="modal-overlay" id="settingsModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>⚙️ Настройки</h2>
+            <button class="modal-close" id="closeSettingsBtn">✕</button>
+        </div>
+        <div class="modal-body">
+            <div id="settingsContent"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Осмотр капсулы -->
+<div class="modal-overlay" id="capsulePreviewModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>💊 Осмотр MeowCap</h2>
+            <button class="modal-close" id="closeCapsulePreviewBtn">✕</button>
+        </div>
+        <div class="modal-body">
+            <div id="capsulePreviewContent"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Результат капсулы -->
+<div class="modal-overlay" id="capsuleResultModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>💊 Результат</h2>
+            <button class="modal-close" id="closeCapsuleResultBtn">✕</button>
+        </div>
+        <div class="modal-body">
+            <div id="capsuleResultContent"></div>
+        </div>
+    </div>
+</div>
+
+<input type="file" id="musicFileInput" accept=".mp3,.wav,.ogg" style="display:none" multiple />
+
+<script>
+    (function() {
+        // --- КОНФИГУРАЦИЯ ---
+        const SKIN_COUNTS = {
+            default: 1,
+            common: 6,
+            rare: 6,
+            epic: 6,
+            mythic: 3
+        };
+
+        const RARITIES = [
+            { id: 'default', label: 'обычный', emoji: '🤍', level: -1, weight: 0, image: 'images/default.png' },
+            { id: 'common', label: 'обычная', emoji: '🔵', level: 0, weight: 50, image: 'images/common.png' },
+            { id: 'rare', label: 'редкая', emoji: '🟣', level: 1, weight: 30, image: 'images/rare.png' },
+            { id: 'epic', label: 'эпическая', emoji: '💗', level: 2, weight: 15, image: 'images/epic.png' },
+            { id: 'mythic', label: 'мифическая', emoji: '🔴', level: 3, weight: 5, image: 'images/mythic.png' }
+        ];
+
+        let settings = {
+            clickVolume: 0.3,
+            capsuleVolume: 0.4,
+            musicVolume: 0.5,
+            currentSong: null,
+            songs: []
+        };
+
+        // --- МУЗЫКА ---
+        let audioPlayer = null;
+        let isPlaying = false;
+        let currentSongName = null;
+
+        function initAudio() {
+            if (!audioPlayer) {
+                audioPlayer = new Audio();
+                audioPlayer.loop = true;
+                audioPlayer.volume = settings.musicVolume;
+            }
+        }
+
+        function playSong(songData, songName) {
+            initAudio();
+            try {
+                if (audioPlayer) {
+                    audioPlayer.pause();
+                }
+                audioPlayer.src = songData;
+                audioPlayer.volume = settings.musicVolume;
+                audioPlayer.loop = true;
+                const playPromise = audioPlayer.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        isPlaying = true;
+                        currentSongName = songName;
+                        settings.currentSong = songName;
+                        saveSettings();
+                        renderSettings();
+                    }).catch(() => {
+                        isPlaying = false;
+                        renderSettings();
+                    });
+                }
+            } catch (e) {}
+        }
+
+        function togglePlay() {
+            if (!audioPlayer || !audioPlayer.src) {
+                if (settings.songs.length > 0 && settings.currentSong) {
+                    const song = settings.songs.find(s => s.name === settings.currentSong);
+                    if (song) {
+                        playSong(song.data, song.name);
+                        return;
+                    }
+                }
+                return;
+            }
+            if (isPlaying) {
+                audioPlayer.pause();
+                isPlaying = false;
+                renderSettings();
+            } else {
+                audioPlayer.volume = settings.musicVolume;
+                audioPlayer.play().catch(() => {});
+                isPlaying = true;
+                renderSettings();
+            }
+        }
+
+        function stopMusic() {
+            if (audioPlayer) {
+                audioPlayer.pause();
+                audioPlayer.src = '';
+                isPlaying = false;
+                currentSongName = null;
+                settings.currentSong = null;
+                saveSettings();
+                renderSettings();
+            }
+        }
+
+        function setMusicVolume(val) {
+            settings.musicVolume = val;
+            if (audioPlayer) {
+                audioPlayer.volume = val;
+            }
+            saveSettings();
+            const volLabel = document.querySelector('.music-volume-row .vol-label');
+            if (volLabel) {
+                volLabel.textContent = Math.round(val * 100) + '%';
+            }
+            const musicSlider = document.getElementById('musicVolume');
+            if (musicSlider) {
+                musicSlider.value = Math.round(val * 100);
+            }
+        }
+
+        function deleteSong(index) {
+            if (index >= 0 && index < settings.songs.length) {
+                const song = settings.songs[index];
+                if (settings.currentSong === song.name) {
+                    stopMusic();
+                }
+                settings.songs.splice(index, 1);
+                if (settings.songs.length === 0) {
+                    settings.currentSong = null;
+                }
+                saveSettings();
+                renderSettings();
+            }
+        }
+
+        function addSongsFromFiles(files) {
+            for (const file of files) {
+                if (file.type.startsWith('audio/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const data = e.target.result;
+                        settings.songs.push({
+                            name: file.name,
+                            data: data
+                        });
+                        saveSettings();
+                        renderSettings();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        }
+
+        // --- ГЛОБАЛЬНЫЕ ---
+        window.addMusicFiles = function() {
+            document.getElementById('musicFileInput').click();
+        };
+
+        window.playSongFromLibrary = function(index) {
+            const song = settings.songs[index];
+            if (song) {
+                playSong(song.data, song.name);
+            }
+        };
+
+        window.deleteSongFromLibrary = function(index) {
+            deleteSong(index);
+        };
+
+        window.toggleMusicPlay = function() {
+            togglePlay();
+        };
+
+        window.stopMusic = function() {
+            stopMusic();
+        };
+
+        // --- ТОСТ ---
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // --- ОСТАЛЬНЫЕ ---
+        function getRarityById(id) {
+            return RARITIES.find(r => r.id === id) || RARITIES[0];
+        }
+
+        function getRarityLevel(id) {
+            return getRarityById(id).level;
+        }
+
+        function getNextRarity(rarityId) {
+            const idx = RARITIES.findIndex(r => r.id === rarityId);
+            if (idx < RARITIES.length - 1 && idx >= 0) return RARITIES[idx + 1];
+            return null;
+        }
+
+        function getSkinPath(rarity, index) {
+            if (rarity === 'default') return 'skins/default/default.png';
+            return `skins/${rarity}/${rarity} (${index}).png`;
+        }
+
+        function getSoundPath(rarity) {
+            if (rarity === 'default') return 'sounds/default.mp3';
+            return `sounds/${rarity}.mp3`;
+        }
+
+        function getRarityImage(rarityId) {
+            const rarity = getRarityById(rarityId);
+            return rarity.image || 'images/default.png';
+        }
+
+        function getRandomSkin(rarity) {
+            if (rarity === 'default') rarity = 'common';
+            const max = SKIN_COUNTS[rarity] || 1;
+            const index = Math.floor(Math.random() * max) + 1;
+            return {
+                rarity: rarity,
+                index: index,
+                name: `${getRarityById(rarity).label} #${index}`
+            };
+        }
+
+        function getAllSkins() {
+            const all = [];
+            for (const rarity of RARITIES) {
+                if (rarity.id === 'default') continue;
+                const max = SKIN_COUNTS[rarity.id] || 1;
+                for (let i = 1; i <= max; i++) {
+                    all.push({
+                        rarity: rarity.id,
+                        index: i,
+                        name: `${rarity.label} #${i}`
+                    });
+                }
+            }
+            return all;
+        }
+
+        // --- СОСТОЯНИЕ ---
+        let state = {
+            score: 0,
+            equippedId: null,
+            skin: { rarity: 'default', index: 1, name: 'Котик' },
+            inventory: [],
+            capsules: 0
+        };
+
+        let selectedForCraft = [];
+        let selectedMythicIndex = -1;
+        let selectedForDelete = [];
+
+        // --- DOM ---
+        const scoreEl = document.getElementById('score');
+        const catImage = document.getElementById('catImage');
+        const skinDisplayEl = document.getElementById('skinDisplay');
+        const capsuleCountEl = document.getElementById('capsuleCount');
+        const openInvBtn = document.getElementById('openInventoryBtn');
+        const modal = document.getElementById('inventoryModal');
+        const closeInvBtn = document.getElementById('closeInventoryBtn');
+        const modalContent = document.getElementById('modalInventoryContent');
+        const craftModal = document.getElementById('craftModal');
+        const closeCraftBtn = document.getElementById('closeCraftBtn');
+        const craftContent = document.getElementById('craftContent');
+        const craftOpenBtn = document.getElementById('craftOpenBtn');
+        const settingsModal = document.getElementById('settingsModal');
+        const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+        const settingsContent = document.getElementById('settingsContent');
+        const settingsOpenBtn = document.getElementById('settingsOpenBtn');
+        const capsulePreviewModal = document.getElementById('capsulePreviewModal');
+        const closeCapsulePreviewBtn = document.getElementById('closeCapsulePreviewBtn');
+        const capsulePreviewContent = document.getElementById('capsulePreviewContent');
+        const capsuleResultModal = document.getElementById('capsuleResultModal');
+        const closeCapsuleResultBtn = document.getElementById('closeCapsuleResultBtn');
+        const capsuleResultContent = document.getElementById('capsuleResultContent');
+        const musicFileInput = document.getElementById('musicFileInput');
+
+        // --- ЗВУКИ ---
+        function playSound(rarity) {
+            try {
+                const audio = new Audio(getSoundPath(rarity));
+                audio.volume = settings.clickVolume;
+                audio.play().catch(() => {});
+            } catch (e) {}
+        }
+
+        function playCapsuleSound() {
+            try {
+                const audio = new Audio('sounds/capsule_open.mp3');
+                audio.volume = settings.capsuleVolume;
+                audio.play().catch(() => {});
+            } catch (e) {}
+        }
+
+        // --- LOCALSTORAGE ---
+        function saveSettings() {
+            try {
+                localStorage.setItem('meowclicker_settings', JSON.stringify(settings));
+            } catch (e) {}
+        }
+
+        function loadSettings() {
+            try {
+                const raw = localStorage.getItem('meowclicker_settings');
+                if (!raw) return false;
+                const parsed = JSON.parse(raw);
+                settings.clickVolume = parsed.clickVolume ?? 0.3;
+                settings.capsuleVolume = parsed.capsuleVolume ?? 0.4;
+                settings.musicVolume = parsed.musicVolume ?? 0.5;
+                settings.currentSong = parsed.currentSong ?? null;
+                settings.songs = parsed.songs ?? [];
+                return true;
+            } catch (e) { return false; }
+        }
+
+        function saveState() {
+            try {
+                localStorage.setItem('meowclicker_save', JSON.stringify({
+                    score: state.score,
+                    equippedId: state.equippedId,
+                    skin: state.skin,
+                    inventory: state.inventory,
+                    capsules: state.capsules
+                }));
+            } catch (e) {}
+        }
+
+        function loadState() {
+            try {
+                const raw = localStorage.getItem('meowclicker_save');
+                if (!raw) return false;
+                const parsed = JSON.parse(raw);
+                state.score = parsed.score ?? 0;
+                state.equippedId = parsed.equippedId ?? null;
+                state.skin = parsed.skin ?? { rarity: 'default', index: 1, name: 'Котик' };
+                state.inventory = parsed.inventory ?? [];
+                state.capsules = parsed.capsules ?? 0;
+                return true;
+            } catch (e) { return false; }
+        }
+
+        // --- ИНВЕНТАРЬ ---
+        function addItemToInventory(item) {
+            const newItem = {
+                ...item,
+                id: Date.now() + Math.random() * 1000
+            };
+            state.inventory.push(newItem);
+            saveState();
+            render();
+            updateAllModals();
+        }
+
+        function getSkins() {
+            return state.inventory.filter(item => 
+                item.rarity !== undefined && item.rarity !== 'default'
+            );
+        }
+
+        function getSortedSkins() {
+            const skins = getSkins();
+            return [...skins].sort((a, b) => {
+                const levelA = getRarityLevel(a.rarity);
+                const levelB = getRarityLevel(b.rarity);
+                if (levelA !== levelB) return levelB - levelA;
+                return (a.index || 0) - (b.index || 0);
+            });
+        }
+
+        function updateAllModals() {
+            if (modal.classList.contains('active')) renderModal();
+            if (craftModal.classList.contains('active')) renderCraftModal();
+            if (capsulePreviewModal.classList.contains('active')) renderCapsulePreview();
+            if (settingsModal.classList.contains('active')) renderSettings();
+        }
+
+        function equipSkin(index, from) {
+            const sorted = getSortedSkins();
+            if (index >= sorted.length) return;
+            const item = sorted[index];
+            const isEquipped = state.equippedId === item.id;
+            if (isEquipped) {
+                state.equippedId = null;
+                state.skin = { rarity: 'default', index: 1, name: 'Котик' };
+            } else {
+                state.equippedId = item.id;
+                state.skin = { rarity: item.rarity, index: item.index, name: item.name };
+            }
+            saveState();
+            render();
+            if (from === 'inventory') renderModal();
+            else renderCraftModal();
+        }
+
+        // --- РЕНДЕР ---
+        function render() {
+            scoreEl.textContent = state.score;
+            const path = getSkinPath(state.skin.rarity, state.skin.index);
+            catImage.src = path;
+            catImage.alt = state.skin.name || 'Котик';
+            catImage.onerror = function() {
+                this.style.display = 'none';
+                const parent = this.parentElement;
+                if (parent) {
+                    parent.textContent = '🐈';
+                    parent.style.fontSize = '4rem';
+                }
+            };
+            catImage.onload = function() {
+                this.style.display = 'block';
+                const parent = this.parentElement;
+                if (parent) {
+                    parent.textContent = '';
+                    parent.appendChild(this);
+                }
+            };
+            if (catImage.complete && catImage.naturalWidth > 0) {
+                catImage.style.display = 'block';
+                const parent = catImage.parentElement;
+                if (parent) {
+                    parent.textContent = '';
+                    parent.appendChild(catImage);
+                }
+            }
+            const rarityObj = getRarityById(state.skin.rarity);
+            skinDisplayEl.innerHTML = `
+                <img src="${getRarityImage(state.skin.rarity)}" alt="${rarityObj.label}" />
+                ${state.skin.name || 'Котик'}
+            `;
+            capsuleCountEl.textContent = state.capsules;
+        }
+
+        // --- ИНВЕНТАРЬ ---
+        function renderModal() {
+            const sorted = getSortedSkins();
+            let html = `<div class="inventory-grid" style="margin-bottom:8px;">`;
+            html += `<div class="inv-slot capsule-slot" onclick="window.openCapsulePreview()">
+                <div style="font-size:2rem;">💊</div>
+                <div class="item-name">MeowCap</div>
+                <div class="item-count" style="position:absolute;top:2px;right:4px;background:#16131f;padding:0 5px;border-radius:20px;font-size:0.5rem;color:#b7a7d9;font-weight:700;">${state.capsules}</div>
+                <div class="slot-label">нажми для осмотра</div>
+            </div>`;
+            if (sorted.length === 0) {
+                html += `<div class="empty-inv">🎀 нет скинов</div>`;
+            } else {
+                for (let i = 0; i < sorted.length; i++) {
+                    const item = sorted[i];
+                    const rarity = getRarityById(item.rarity);
+                    const imgPath = getSkinPath(item.rarity, item.index);
+                    const isEquipped = state.equippedId === item.id;
+                    html += `<div class="inv-slot rarity-${item.rarity} ${isEquipped ? 'equipped' : ''}" 
+                             onclick="window.equipFromInventory(${i})">`;
+                    if (isEquipped) {
+                        html += `<div class="equipped-badge">✓</div>`;
+                    }
+                    html += `<img src="${imgPath}" alt="${item.name}" loading="lazy" onerror="this.style.display='none';" />
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-rarity"><img src="${getRarityImage(item.rarity)}" alt="${rarity.label}" /></div>`;
+                    html += `</div>`;
+                }
+            }
+            html += `</div>`;
+            modalContent.innerHTML = html;
+        }
+
+        window.equipFromInventory = function(index) {
+            equipSkin(index, 'inventory');
+        };
+
+        // --- КАПСУЛА ---
+        function renderCapsulePreview() {
+            const allSkins = getAllSkins();
+            let html = `
+                <div style="text-align:center; margin-bottom:12px;">
+                    <div style="font-size:3rem;">💊</div>
+                    <div class="capsule-preview-title">MeowCap</div>
+                    <div class="capsule-preview-count">${state.capsules} шт. в инвентаре</div>
+                    <button class="btn btn-success" onclick="window.openCapsule()" ${state.capsules <= 0 ? 'disabled' : ''}>
+                        🎯 Открыть (${state.capsules})
+                    </button>
+                </div>
+                <div style="border-top: 2px solid #3f3457; padding-top: 10px;">
+                    <div style="color:#b7a7d9; font-size:0.7rem; margin-bottom:6px;">📋 Все возможные скины:</div>
+                    <div class="capsule-preview-grid">
+            `;
+            for (const skin of allSkins) {
+                const rarity = getRarityById(skin.rarity);
+                const imgPath = getSkinPath(skin.rarity, skin.index);
+                html += `
+                    <div class="capsule-preview-item ${skin.rarity}">
+                        <img src="${imgPath}" alt="${skin.name}" loading="lazy" onerror="this.style.display='none';" />
+                        <div class="preview-name">${skin.name}</div>
+                        <div class="preview-rarity"><img src="${getRarityImage(skin.rarity)}" alt="${rarity.label}" /></div>
+                    </div>
+                `;
+            }
+            html += `
+                    </div>
+                </div>
+            `;
+            capsulePreviewContent.innerHTML = html;
+        }
+
+        window.openCapsulePreview = function() {
+            renderCapsulePreview();
+            capsulePreviewModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.openCapsule = function() {
+            if (state.capsules <= 0) return;
+            
+            capsulePreviewModal.classList.remove('active');
+            document.body.style.overflow = '';
+            
+            const totalWeight = RARITIES.filter(r => r.id !== 'default').reduce((s, r) => s + r.weight, 0);
+            let rand = Math.random() * totalWeight;
+            let chosenRarity = RARITIES[1];
+            for (const r of RARITIES) {
+                if (r.id === 'default') continue;
+                rand -= r.weight;
+                if (rand <= 0) { chosenRarity = r; break; }
+            }
+            
+            const winSkin = getRandomSkin(chosenRarity.id);
+            
+            const newItem = {
+                rarity: winSkin.rarity,
+                index: winSkin.index,
+                name: winSkin.name,
+                id: Date.now() + Math.random() * 1000
+            };
+            state.inventory.push(newItem);
+            
+            const currentLevel = getRarityLevel(state.skin.rarity);
+            if (getRarityLevel(winSkin.rarity) > currentLevel) {
+                state.equippedId = newItem.id;
+                state.skin = { rarity: winSkin.rarity, index: winSkin.index, name: winSkin.name };
+            }
+            
+            state.capsules -= 1;
+            saveState();
+            render();
+            updateAllModals();
+            
+            const rarity = getRarityById(winSkin.rarity);
+            const imgPath = getSkinPath(winSkin.rarity, winSkin.index);
+            capsuleResultContent.innerHTML = `
+                <div style="text-align:center; padding:10px 0;">
+                    <div style="font-size:1.2rem; margin-bottom:8px;">🎉 Выпало:</div>
+                    <div style="display:flex; align-items:center; justify-content:center; gap:12px; padding:12px; background:#1f1a2b; border-radius:20px; border:2px solid #f0b34b;">
+                        <img src="${imgPath}" alt="${winSkin.name}" style="width:48px; height:48px; object-fit:contain; border-radius:8px;" />
+                        <div style="text-align:left;">
+                            <div style="color:#f0e6c5; font-weight:700;">${winSkin.name}</div>
+                            <div style="color:#b7a7d9; font-size:0.8rem;">${rarity.label}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            capsuleResultModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            playSound(winSkin.rarity);
+            playCapsuleSound();
+            showToast('💊 Капсула открыта!');
+        };
+
+        function closeCapsuleResult() {
+            capsuleResultModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // --- КРАФТ ---
+        function renderCraftModal() {
+            const sorted = getSortedSkins();
+            let html = `<div class="inventory-grid" style="margin-bottom:8px;">`;
+            if (sorted.length === 0) {
+                html += `<div class="empty-inv">🎀 нет скинов для улучшения</div>`;
+            } else {
+                for (let i = 0; i < sorted.length; i++) {
+                    const item = sorted[i];
+                    const rarity = getRarityById(item.rarity);
+                    const isSelected = selectedForCraft.includes(i);
+                    const isMythic = item.rarity === 'mythic';
+                    const isMythicSelected = selectedMythicIndex === i;
+                    const canSelect = item.rarity !== 'default' && !isMythic;
+                    const imgPath = getSkinPath(item.rarity, item.index);
+                    const isEquipped = state.equippedId === item.id;
+                    html += `<div class="inv-slot rarity-${item.rarity} ${isSelected ? 'selected' : ''} ${isMythicSelected ? 'selected' : ''} ${isEquipped ? 'equipped' : ''}"
+                             style="${canSelect || isMythic ? 'cursor:pointer;' : 'cursor:default;'}">`;
+                    if (isEquipped) {
+                        html += `<div class="equipped-badge">✓</div>`;
+                    }
+                    if (isMythic) {
+                        html += `<div onclick="window.selectMythicForExchange(${i})" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;">`;
+                    } else if (canSelect) {
+                        html += `<div onclick="window.toggleCraftSelect(${i})" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;">`;
+                    }
+                    html += `<img src="${imgPath}" alt="${item.name}" loading="lazy" onerror="this.style.display='none';" />
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-rarity"><img src="${getRarityImage(item.rarity)}" alt="${rarity.label}" /></div>`;
+                    if (canSelect || isMythic) {
+                        html += `<div class="craft-select">✓</div>`;
+                        html += `</div>`;
+                    }
+                    html += `</div>`;
+                }
+            }
+            html += `</div>`;
+
+            const selectedCount = selectedForCraft.length;
+            let canCraft = false;
+            let canExchange = selectedMythicIndex >= 0;
+            let craftInfo = 'Выберите 10 предметов одной редкости';
+
+            if (selectedCount > 0 && selectedCount < 10) {
+                craftInfo = `Выбрано ${selectedCount}/10`;
+            } else if (selectedCount === 10) {
+                const firstRarity = sorted[selectedForCraft[0]]?.rarity;
+                const allSame = selectedForCraft.every(idx => sorted[idx]?.rarity === firstRarity);
+                if (allSame && firstRarity && firstRarity !== 'default' && firstRarity !== 'mythic') {
+                    const nextRarity = getNextRarity(firstRarity);
+                    if (nextRarity) {
+                        canCraft = true;
+                        craftInfo = `✅ 10×${getRarityById(firstRarity).label} → 1×${nextRarity.label}`;
+                    }
+                } else {
+                    craftInfo = '❌ Все предметы должны быть одной редкости (не default/mythic)';
+                }
+            }
+
+            if (canExchange) {
+                const mythicItem = sorted[selectedMythicIndex];
+                if (mythicItem && mythicItem.rarity === 'mythic') {
+                    craftInfo = `🔄 Обменять ${mythicItem.name} на 10 капсул`;
+                }
+            }
+
+            html += `<div class="craft-action-panel">
+                <div class="craft-info">${craftInfo}</div>
+                <button class="craft-action-btn" id="craftActionBtn" ${!canCraft && !canExchange ? 'disabled' : ''}>
+                    ${canExchange ? '🔄 Обменять' : '🔨 Улучшить'}
+                </button>
+            </div>`;
+
+            craftContent.innerHTML = html;
+
+            document.getElementById('craftActionBtn')?.addEventListener('click', function() {
+                if (selectedMythicIndex >= 0) {
+                    exchangeMythic();
+                } else if (selectedForCraft.length === 10) {
+                    performCraft();
+                }
+            });
+        }
+
+        window.toggleCraftSelect = function(index) {
+            const sorted = getSortedSkins();
+            if (index >= sorted.length) return;
+            const item = sorted[index];
+            if (item.rarity === 'default' || item.rarity === 'mythic') return;
+            const idx = selectedForCraft.indexOf(index);
+            if (idx > -1) {
+                selectedForCraft.splice(idx, 1);
+            } else {
+                if (selectedForCraft.length >= 10) return;
+                if (selectedForCraft.length > 0) {
+                    const firstRarity = sorted[selectedForCraft[0]]?.rarity;
+                    if (firstRarity !== item.rarity) return;
+                }
+                selectedForCraft.push(index);
+            }
+            renderCraftModal();
+        };
+
+        window.selectMythicForExchange = function(index) {
+            const sorted = getSortedSkins();
+            if (index >= sorted.length) return;
+            const item = sorted[index];
+            if (item.rarity !== 'mythic') return;
+            if (selectedMythicIndex === index) {
+                selectedMythicIndex = -1;
+            } else {
+                selectedForCraft = [];
+                selectedMythicIndex = index;
+            }
+            renderCraftModal();
+        };
+
+        function performCraft() {
+            const sorted = getSortedSkins();
+            if (selectedForCraft.length !== 10) return;
+            const firstRarity = sorted[selectedForCraft[0]]?.rarity;
+            if (!firstRarity || firstRarity === 'default' || firstRarity === 'mythic') return;
+            const allSame = selectedForCraft.every(idx => sorted[idx]?.rarity === firstRarity);
+            if (!allSame) return;
+            const nextRarity = getNextRarity(firstRarity);
+            if (!nextRarity) return;
+            const sortedIndices = [...selectedForCraft].sort((a, b) => b - a);
+            for (const idx of sortedIndices) {
+                const item = sorted[idx];
+                const realIdx = state.inventory.findIndex(i => i.id === item.id);
+                if (realIdx > -1) {
+                    state.inventory.splice(realIdx, 1);
+                }
+            }
+            const newSkin = getRandomSkin(nextRarity.id);
+            addItemToInventory(newSkin);
+            const currentLevel = getRarityLevel(state.skin.rarity);
+            if (getRarityLevel(nextRarity.id) > currentLevel) {
+                state.equippedId = newSkin.id;
+                state.skin = { ...newSkin };
+            }
+            selectedForCraft = [];
+            selectedMythicIndex = -1;
+            saveState();
+            render();
+            renderCraftModal();
+        }
+
+        function exchangeMythic() {
+            const sorted = getSortedSkins();
+            if (selectedMythicIndex < 0 || selectedMythicIndex >= sorted.length) return;
+            const item = sorted[selectedMythicIndex];
+            if (!item || item.rarity !== 'mythic') return;
+            const realIdx = state.inventory.findIndex(i => i.id === item.id);
+            if (realIdx > -1) {
+                state.inventory.splice(realIdx, 1);
+                state.capsules += 10;
+                if (state.equippedId === item.id) {
+                    state.equippedId = null;
+                    state.skin = { rarity: 'default', index: 1, name: 'Котик' };
+                }
+                selectedMythicIndex = -1;
+                saveState();
+                render();
+                renderCraftModal();
+                showToast('🔄 Мифик обменян на 10 капсул!');
+            }
+        }
+
+        // --- НАСТРОЙКИ С ВКЛАДКАМИ ---
+        function renderSettings() {
+            let html = `
+                <div class="settings-tabs">
+                    <button class="tab-btn active" data-tab="main" onclick="window.switchSettingsTab('main')">Основные</button>
+                    <button class="tab-btn" data-tab="clean" onclick="window.switchSettingsTab('clean')">Очистка</button>
+                </div>
+            `;
+
+            // Вкладка "Основные"
+            html += `<div class="settings-tab-content active" id="tab-main">`;
+            html += `
+                <div class="settings-group">
+                    <label>
+                        <span>🔊 Громкость клика</span>
+                        <span class="settings-value">${Math.round(settings.clickVolume * 100)}%</span>
+                    </label>
+                    <input type="range" id="clickVolume" min="0" max="100" value="${Math.round(settings.clickVolume * 100)}" />
+                </div>
+                <div class="settings-group">
+                    <label>
+                        <span>🔊 Громкость капсулы</span>
+                        <span class="settings-value">${Math.round(settings.capsuleVolume * 100)}%</span>
+                    </label>
+                    <input type="range" id="capsuleVolume" min="0" max="100" value="${Math.round(settings.capsuleVolume * 100)}" />
+                </div>
+            `;
+
+            html += `<div class="music-library">`;
+            html += `<div class="music-header">
+                <span>🎵 Фоновая музыка</span>
+                <button class="btn-sm success" onclick="window.addMusicFiles()">📁 Добавить</button>
+            </div>`;
+
+            html += `<div class="music-controls">`;
+            if (settings.songs.length > 0) {
+                const isPlayingNow = isPlaying && audioPlayer && audioPlayer.src;
+                html += `<button class="btn-sm ${isPlayingNow ? 'playing' : ''}" onclick="window.toggleMusicPlay()">${isPlayingNow ? '⏸️ Пауза' : '▶️ Играть'}</button>`;
+                html += `<button class="btn-sm danger" onclick="window.stopMusic()">⏹️ Стоп</button>`;
+                if (currentSongName || settings.currentSong) {
+                    html += `<span style="color:#6bcf7b;font-size:0.7rem;">🎵 ${currentSongName || settings.currentSong}</span>`;
+                }
+            } else {
+                html += `<span style="color:#6d5d85;font-size:0.7rem;">Нет добавленных песен</span>`;
+            }
+            html += `</div>`;
+
+            html += `<div class="music-volume-row">
+                <span style="color:#b7a7d9;font-size:0.6rem;">🔊</span>
+                <input type="range" id="musicVolume" min="0" max="100" value="${Math.round(settings.musicVolume * 100)}" />
+                <span class="vol-label">${Math.round(settings.musicVolume * 100)}%</span>
+            </div>`;
+
+            html += `<div class="music-song-list">`;
+            if (settings.songs.length === 0) {
+                html += `<div class="music-empty">🎵 Нет песен. Нажмите "Добавить"</div>`;
+            } else {
+                for (let i = 0; i < settings.songs.length; i++) {
+                    const song = settings.songs[i];
+                    const isCurrent = settings.currentSong === song.name;
+                    html += `<div class="music-song-item">
+                        <span class="song-name">${isCurrent && isPlaying ? '▶️ ' : ''}${song.name}</span>
+                        <div class="song-actions">
+                            <button class="btn-sm success" onclick="window.playSongFromLibrary(${i})">▶️</button>
+                            <button class="btn-sm danger" onclick="window.deleteSongFromLibrary(${i})">🗑️</button>
+                        </div>
+                    </div>`;
+                }
+            }
+            html += `</div>`;
+            if (settings.songs.length > 0 && isPlaying) {
+                html += `<div class="now-playing">🎵 Сейчас играет: ${currentSongName || settings.currentSong || '...'}</div>`;
+            }
+            html += `</div>`;
+
+            // Сброс прогресса
+            html += `
+                <div class="reset-danger-group">
+                    <div class="reset-header">
+                        <span>🗑️ Сброс прогресса</span>
+                        <button class="btn-sm danger" onclick="window.showResetConfirm()">Сбросить</button>
+                    </div>
+                    <div class="reset-confirm-box" id="resetConfirmBox">
+                        <span>⚠️ Удалить весь прогресс? (музыка сохранится)</span>
+                        <div class="btn-row-sm">
+                            <button class="btn-sm secondary" onclick="window.cancelReset()">Отмена</button>
+                            <button class="btn-sm danger" onclick="window.confirmReset()">Да, сбросить</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            html += `</div>`;
+
+            // Вкладка "Очистка"
+            html += `<div class="settings-tab-content" id="tab-clean">`;
+            html += `<div id="cleanContent"></div>`;
+            html += `</div>`;
+
+            html += `
+                <div style="color:#6d5d85; font-size:0.7rem; text-align:center; margin-top:8px;">
+                    💾 Настройки сохраняются автоматически
+                </div>
+            `;
+
+            settingsContent.innerHTML = html;
+
+            // Обработчики вкладок
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.settings-tab-content').forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    const tab = this.dataset.tab;
+                    document.getElementById('tab-' + tab).classList.add('active');
+                    if (tab === 'clean') renderCleanTab();
+                });
+            });
+
+            // Обработчики слайдеров
+            const clickSlider = document.getElementById('clickVolume');
+            if (clickSlider) {
+                const clickValue = clickSlider.parentElement.querySelector('.settings-value');
+                clickSlider.addEventListener('input', function() {
+                    const val = parseInt(this.value) / 100;
+                    settings.clickVolume = val;
+                    clickValue.textContent = Math.round(val * 100) + '%';
+                    saveSettings();
+                });
+            }
+
+            const capsuleSlider = document.getElementById('capsuleVolume');
+            if (capsuleSlider) {
+                const capsuleValue = capsuleSlider.parentElement.querySelector('.settings-value');
+                capsuleSlider.addEventListener('input', function() {
+                    const val = parseInt(this.value) / 100;
+                    settings.capsuleVolume = val;
+                    capsuleValue.textContent = Math.round(val * 100) + '%';
+                    saveSettings();
+                });
+            }
+
+            const musicSlider = document.getElementById('musicVolume');
+            if (musicSlider) {
+                const musicValue = musicSlider.parentElement.querySelector('.vol-label');
+                musicSlider.addEventListener('input', function() {
+                    const val = parseInt(this.value) / 100;
+                    settings.musicVolume = val;
+                    if (audioPlayer) {
+                        audioPlayer.volume = val;
+                    }
+                    musicValue.textContent = Math.round(val * 100) + '%';
+                    saveSettings();
+                });
+            }
+
+            // Рендерим вкладку очистки если она активна
+            if (document.getElementById('tab-clean').classList.contains('active')) {
+                renderCleanTab();
+            }
+        }
+
+        // --- ВКЛАДКА ОЧИСТКИ ---
+        function renderCleanTab() {
+            const sorted = getSortedSkins();
+            let html = `
+                <div style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="color:#d6c9f0; font-size:0.8rem;">Выберите скины для удаления</span>
+                    ${sorted.length > 0 ? `<button class="btn-sm secondary" onclick="window.selectAllForDelete()">Выбрать все</button>` : ''}
+                </div>
+                <div class="inventory-grid" style="margin-bottom:8px;">
+            `;
+
+            if (sorted.length === 0) {
+                html += `<div class="empty-inv">🎀 нет скинов для удаления</div>`;
+            } else {
+                for (let i = 0; i < sorted.length; i++) {
+                    const item = sorted[i];
+                    const rarity = getRarityById(item.rarity);
+                    const imgPath = getSkinPath(item.rarity, item.index);
+                    const isSelected = selectedForDelete.includes(i);
+                    const isEquipped = state.equippedId === item.id;
+                    
+                    html += `<div class="inv-slot rarity-${item.rarity} ${isSelected ? 'selected-delete' : ''} ${isEquipped ? 'equipped' : ''}"
+                             onclick="window.toggleDeleteSelect(${i})"
+                             style="${isEquipped ? 'cursor:default;' : 'cursor:pointer;'}">`;
+                    
+                    if (isEquipped) {
+                        html += `<div class="equipped-badge">✓</div>`;
+                    }
+                    if (isSelected) {
+                        html += `<div class="delete-check">✓</div>`;
+                    } else {
+                        html += `<div class="delete-check"></div>`;
+                    }
+                    
+                    html += `<img src="${imgPath}" alt="${item.name}" loading="lazy" onerror="this.style.display='none';" />
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-rarity"><img src="${getRarityImage(item.rarity)}" alt="${rarity.label}" /></div>`;
+                    html += `</div>`;
+                }
+            }
+            html += `</div>`;
+
+            const selectedCount = selectedForDelete.length;
+            const canDelete = selectedCount > 0;
+
+            html += `
+                <div class="delete-action-panel">
+                    <div class="delete-info">${selectedCount > 0 ? `Выбрано ${selectedCount} предметов` : 'Выберите предметы для удаления'}</div>
+                    <button class="delete-action-btn" id="deleteActionBtn" ${!canDelete ? 'disabled' : ''}>
+                        🗑️ Удалить (${selectedCount})
+                    </button>
+                </div>
+                <div class="delete-confirm-box" id="deleteConfirmBox">
+                    <span>⚠️ Вы уверены, что хотите удалить выбранные скины?</span>
+                    <div class="btn-row-sm">
+                        <button class="btn-sm secondary" onclick="window.cancelDelete()">Нет</button>
+                        <button class="btn-sm danger" onclick="window.confirmDelete()">Да, удалить</button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('cleanContent').innerHTML = html;
+
+            document.getElementById('deleteActionBtn')?.addEventListener('click', function() {
+                if (selectedForDelete.length > 0) {
+                    document.getElementById('deleteConfirmBox').classList.add('active');
+                }
+            });
+        }
+
+        window.toggleDeleteSelect = function(index) {
+            const sorted = getSortedSkins();
+            if (index >= sorted.length) return;
+            const item = sorted[index];
+            // Нельзя удалить надетый скин
+            if (state.equippedId === item.id) return;
+            
+            const idx = selectedForDelete.indexOf(index);
+            if (idx > -1) {
+                selectedForDelete.splice(idx, 1);
+            } else {
+                selectedForDelete.push(index);
+            }
+            renderCleanTab();
+        };
+
+        window.selectAllForDelete = function() {
+            const sorted = getSortedSkins();
+            selectedForDelete = [];
+            for (let i = 0; i < sorted.length; i++) {
+                const item = sorted[i];
+                if (state.equippedId !== item.id) {
+                    selectedForDelete.push(i);
+                }
+            }
+            renderCleanTab();
+        };
+
+        window.cancelDelete = function() {
+            document.getElementById('deleteConfirmBox').classList.remove('active');
+        };
+
+        window.confirmDelete = function() {
+            const sorted = getSortedSkins();
+            // Удаляем с конца, чтобы индексы не сбивались
+            const sortedIndices = [...selectedForDelete].sort((a, b) => b - a);
+            for (const idx of sortedIndices) {
+                const item = sorted[idx];
+                // Пропускаем если надет (защита)
+                if (state.equippedId === item.id) continue;
+                const realIdx = state.inventory.findIndex(i => i.id === item.id);
+                if (realIdx > -1) {
+                    state.inventory.splice(realIdx, 1);
+                }
+            }
+            selectedForDelete = [];
+            document.getElementById('deleteConfirmBox').classList.remove('active');
+            saveState();
+            render();
+            renderCleanTab();
+            showToast('🗑️ Скины удалены!');
+        };
+
+        // --- ВКЛАДКИ ---
+        window.switchSettingsTab = function(tab) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.settings-tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelector(`.tab-btn[data-tab="${tab}"]`).classList.add('active');
+            document.getElementById('tab-' + tab).classList.add('active');
+            if (tab === 'clean') renderCleanTab();
+        };
+
+        // --- СБРОС ---
+        window.showResetConfirm = function() {
+            document.getElementById('resetConfirmBox').classList.add('active');
+        };
+
+        window.cancelReset = function() {
+            document.getElementById('resetConfirmBox').classList.remove('active');
+        };
+
+        window.confirmReset = function() {
+            const savedSongs = settings.songs ? [...settings.songs] : [];
+            const savedCurrentSong = settings.currentSong;
+            const savedMusicVolume = settings.musicVolume;
+            
+            state.score = 0;
+            state.equippedId = null;
+            state.skin = { rarity: 'default', index: 1, name: 'Котик' };
+            state.inventory = [];
+            state.capsules = 0;
+            selectedForCraft = [];
+            selectedMythicIndex = -1;
+            selectedForDelete = [];
+            
+            settings.songs = savedSongs;
+            settings.currentSong = savedCurrentSong;
+            settings.musicVolume = savedMusicVolume;
+            
+            if (settings.songs.length > 0 && settings.currentSong) {
+                const song = settings.songs.find(s => s.name === settings.currentSong);
+                if (song && audioPlayer) {
+                    audioPlayer.src = song.data;
+                    audioPlayer.volume = settings.musicVolume;
+                    audioPlayer.loop = true;
+                }
+            }
+            
+            saveSettings();
+            saveState();
+            render();
+            renderSettings();
+            
+            document.getElementById('resetConfirmBox').classList.remove('active');
+            showToast('🗑️ Прогресс сброшен!');
+        };
+
+        // --- ВЫПАДЕНИЕ КАПСУЛЫ ---
+        function tryDropCapsule() {
+            if (Math.random() < 0.002) {
+                state.capsules += 1;
+                saveState();
+                render();
+                updateAllModals();
+                showToast('💊 Получена капсула!');
+                return true;
+            }
+            return false;
+        }
+
+        // --- КЛИК ---
+        function handleCatClick(e) {
+            if (e) e.preventDefault();
+            state.score += 1;
+            tryDropCapsule();
+            saveState();
+            render();
+            
+            catImage.style.transform = 'scale(0.85)';
+            setTimeout(() => {
+                catImage.style.transform = 'scale(1)';
+            }, 100);
+            
+            playSound(state.skin.rarity);
+        }
+
+        // --- МОДАЛКИ ---
+        function openModal() {
+            modal.classList.add('active');
+            renderModal();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function openCraftModal() {
+            craftModal.classList.add('active');
+            selectedForCraft = [];
+            selectedMythicIndex = -1;
+            renderCraftModal();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCraftModal() {
+            craftModal.classList.remove('active');
+            selectedForCraft = [];
+            selectedMythicIndex = -1;
+            document.body.style.overflow = '';
+        }
+
+        function openSettingsModal() {
+            settingsModal.classList.add('active');
+            selectedForDelete = [];
+            renderSettings();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSettingsModal() {
+            settingsModal.classList.remove('active');
+            selectedForDelete = [];
+            document.body.style.overflow = '';
+        }
+
+        // --- ИНИЦИАЛИЗАЦИЯ ---
+        function init() {
+            loadSettings();
+            
+            const loaded = loadState();
+            if (!loaded) {
+                state.skin = { rarity: 'default', index: 1, name: 'Котик' };
+                state.inventory = [];
+                state.capsules = 0;
+                state.score = 0;
+                state.equippedId = null;
+                saveState();
+            }
+
+            if (settings.songs.length > 0 && settings.currentSong) {
+                const song = settings.songs.find(s => s.name === settings.currentSong);
+                if (song) {
+                    initAudio();
+                    audioPlayer.src = song.data;
+                    audioPlayer.volume = settings.musicVolume;
+                    audioPlayer.loop = true;
+                }
+            }
+
+            render();
+
+            musicFileInput.addEventListener('change', function(e) {
+                if (this.files && this.files.length > 0) {
+                    addSongsFromFiles(this.files);
+                }
+                this.value = '';
+            });
+
+            closeCapsuleResultBtn.addEventListener('click', closeCapsuleResult);
+            capsuleResultModal.addEventListener('click', function(e) {
+                if (e.target === capsuleResultModal) closeCapsuleResult();
+            });
+
+            const catElement = document.getElementById('cat');
+            catElement.addEventListener('click', handleCatClick);
+            catElement.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                handleCatClick(e);
+            });
+
+            openInvBtn.addEventListener('click', openModal);
+            closeInvBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) closeModal();
+            });
+
+            craftOpenBtn.addEventListener('click', openCraftModal);
+            closeCraftBtn.addEventListener('click', closeCraftModal);
+            craftModal.addEventListener('click', function(e) {
+                if (e.target === craftModal) closeCraftModal();
+            });
+
+            settingsOpenBtn.addEventListener('click', openSettingsModal);
+            closeSettingsBtn.addEventListener('click', closeSettingsModal);
+            settingsModal.addEventListener('click', function(e) {
+                if (e.target === settingsModal) closeSettingsModal();
+            });
+
+            closeCapsulePreviewBtn.addEventListener('click', function() {
+                capsulePreviewModal.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+            capsulePreviewModal.addEventListener('click', function(e) {
+                if (e.target === capsulePreviewModal) {
+                    capsulePreviewModal.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    if (modal.classList.contains('active')) closeModal();
+                    if (craftModal.classList.contains('active')) closeCraftModal();
+                    if (settingsModal.classList.contains('active')) closeSettingsModal();
+                    if (capsulePreviewModal.classList.contains('active')) {
+                        capsulePreviewModal.classList.remove('active');
+                        document.body.style.overflow = '';
+                    }
+                    if (capsuleResultModal.classList.contains('active')) closeCapsuleResult();
+                }
+            });
+        }
+
+        init();
+    })();
+</script>
+</body>
+</html>
